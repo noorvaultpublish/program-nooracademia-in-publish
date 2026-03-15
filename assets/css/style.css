@@ -1,34 +1,32 @@
 ---
 ---
-/* Noor Academia Global CSS - Fixed Version */
+/* Noor Academia Local Stylesheet */
 
 :root {
     --primary-blue: #004a99;
-    --white: #ffffff;
 }
 
-/* --- LOGO SIZE FIX --- */
+/* 1. Fix the Logo Size */
 .header-logo {
     height: 45px !important;
     width: auto !important;
     display: block !important;
 }
 
-/* --- HEADER ALIGNMENT --- */
+/* 2. Align the Header Content */
 .header-container {
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
-    padding: 10px 0;
 }
 
-/* --- MENU ALIGNMENT --- */
+/* 3. Fix the Menu Display */
 .nav-links {
     display: flex !important;
     list-style: none !important;
+    gap: 20px !important;
     margin: 0 !important;
     padding: 0 !important;
-    gap: 20px !important;
 }
 
 .nav-links li a {
@@ -37,34 +35,9 @@
     font-weight: 600 !important;
 }
 
-/* --- HIDE THE MOBILE TOGGLER ON DESKTOP --- */
-.nav-toggler, .nav-icon {
-    display: none !important;
-}
-
-/* --- GRID FIX --- */
+/* 4. Ensure Course Grid Layout */
 .course-grid {
     display: grid !important;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
     gap: 25px !important;
-}
-
-/* --- MOBILE RESPONSIVENESS --- */
-@media (max-width: 850px) {
-    .nav-icon {
-        display: block !important;
-    }
-    .nav-links {
-        display: none !important; /* Hide on mobile until click */
-        position: absolute;
-        top: 60px;
-        right: 0;
-        background: #fff;
-        width: 100%;
-        flex-direction: column;
-        border-bottom: 2px solid var(--primary-blue);
-    }
-    .nav-toggler:checked ~ .nav-links {
-        display: flex !important;
-    }
 }
