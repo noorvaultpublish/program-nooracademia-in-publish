@@ -1,110 +1,40 @@
----
----
-/* Noor Academia Branding & Layout */
-
-:root {
-    --primary-blue: #004a99;
-    --text-dark: #333;
-    --bg-light: #f9f9f9;
-}
-
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: var(--text-dark);
-    line-height: 1.6;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* --- Header & Logo Fixes --- */
+/* --- Header & Logo Size Fix --- */
 header {
     background: #fff;
-    padding: 15px 0;
+    padding: 8px 0; /* Reduced padding for a slimmer header */
     border-bottom: 2px solid #eee;
 }
 
-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo-link {
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    color: inherit;
-}
-
 .header-logo { 
-    height: 50px; 
-    width: auto;
+    height: 40px;    /* Fixed height - Adjust this number to change logo size */
+    width: auto;     /* Maintains aspect ratio */
+    display: block;
 }
 
 .logo-text-wrapper {
-    margin-left: 12px;
+    margin-left: 10px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 
 .logo-main { 
     color: var(--primary-blue); 
     font-weight: 800; 
-    font-size: 1.5rem; 
-    letter-spacing: 1px;
+    font-size: 1.2rem; /* Reduced from 1.5rem */
+    line-height: 1;
 }
 
 .logo-sub { 
     font-weight: 400; 
-    font-size: 1.5rem; 
+    font-size: 1.2rem; /* Reduced from 1.5rem */
+    line-height: 1;
 }
 
 .header-tagline { 
-    display: block; 
-    font-size: 0.75rem; 
+    font-size: 0.65rem; /* Reduced size */
     color: #777; 
-    letter-spacing: 3px; 
+    letter-spacing: 2px; 
     font-weight: bold;
-    margin-top: -5px;
+    margin-top: 2px;
 }
-
-.nav-compiler-link {
-    background: var(--primary-blue);
-    color: #fff !important;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background 0.3s;
-}
-
-.nav-compiler-link:hover {
-    background: #003366;
-}
-
-/* --- Catalog Hero --- */
-.catalog-hero {
-    background: var(--bg-light);
-    padding: 80px 0;
-    text-align: center;
-    border-bottom: 1px solid #eee;
-}
-
-.catalog-hero h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    color: var(--primary-blue);
-}
-
-/* --- Course Grid --- */
-.course-catalog { 
-    padding: 60px 0; 
-}
-
-.course-grid {
