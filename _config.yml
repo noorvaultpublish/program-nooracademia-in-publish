@@ -1,0 +1,13 @@
+# Site Settings
+title: Programming Course | Noor Academia
+description: Programming courses for students.
+url: "https://program.nooracademia.in"
+baseurl: ""
+
+# The Magic Connection
+remote_theme: nooracademia-owner/noor-vault-academia-in
+
+# Plugins
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
