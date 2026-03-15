@@ -1,86 +1,70 @@
 ---
 ---
-/* Noor Academia Global CSS 
-   Purpose: Unified branding, Responsive Navigation, and Course Grid
-*/
+/* Noor Academia Global CSS - Fixed Version */
 
 :root {
     --primary-blue: #004a99;
-    --text-dark: #333;
-    --text-light: #666;
-    --bg-light: #f9f9f9;
     --white: #ffffff;
-    --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
-* { box-sizing: border-box; }
-
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: var(--text-dark);
-    line-height: 1.6;
-    background-color: var(--white);
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* --- HEADER & BRANDING --- */
-header {
-    background: var(--white);
-    padding: 12px 0;
-    border-bottom: 2px solid #eee;
-    position: relative;
-    z-index: 1000;
-}
-
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo-link {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-}
-
+/* --- LOGO SIZE FIX --- */
 .header-logo {
     height: 45px !important;
-    width: auto;
-    display: block;
+    width: auto !important;
+    display: block !important;
 }
 
-.logo-text-wrapper {
-    margin-left: 12px;
-    display: flex;
-    flex-direction: column;
+/* --- HEADER ALIGNMENT --- */
+.header-container {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 10px 0;
 }
 
-.logo-main {
-    color: var(--primary-blue);
-    font-weight: 800;
-    font-size: 1.3rem;
-    line-height: 1;
+/* --- MENU ALIGNMENT --- */
+.nav-links {
+    display: flex !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 20px !important;
 }
 
-.logo-sub {
-    font-weight: 400;
-    font-size: 1.3rem;
-    line-height: 1;
+.nav-links li a {
+    text-decoration: none !important;
+    color: #333 !important;
+    font-weight: 600 !important;
 }
 
-.header-tagline {
-    display: block;
-    font-size: 0.65rem;
-    color: var(--text-light);
-    letter-spacing: 2px;
-    font-weight: bold;
-    margin-
+/* --- HIDE THE MOBILE TOGGLER ON DESKTOP --- */
+.nav-toggler, .nav-icon {
+    display: none !important;
+}
+
+/* --- GRID FIX --- */
+.course-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    gap: 25px !important;
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 850px) {
+    .nav-icon {
+        display: block !important;
+    }
+    .nav-links {
+        display: none !important; /* Hide on mobile until click */
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background: #fff;
+        width: 100%;
+        flex-direction: column;
+        border-bottom: 2px solid var(--primary-blue);
+    }
+    .nav-toggler:checked ~ .nav-links {
+        display: flex !important;
+    }
+}
