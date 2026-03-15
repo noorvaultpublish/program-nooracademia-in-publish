@@ -1,28 +1,21 @@
 ---
 ---
-/* Noor Academia Global CSS 
-   Purpose: Unified styling for branding and course components.
+/* Noor Academia Global Template CSS
+   Handles: Logo scaling, Navigation, and Course Grid
 */
 
 :root {
     --primary-blue: #004a99;
     --text-dark: #333;
-    --text-light: #666;
     --bg-light: #f9f9f9;
     --white: #ffffff;
-    --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-}
-
-* {
-    box-sizing: border-box;
 }
 
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--text-dark);
-    background-color: var(--white);
     line-height: 1.6;
 }
 
@@ -32,15 +25,15 @@ body {
     padding: 0 20px;
 }
 
-/* --- GLOBAL HEADER & LOGO --- */
+/* --- HEADER & BRANDING --- */
 header {
     background: var(--white);
-    padding: 10px 0;
+    padding: 12px 0;
     border-bottom: 2px solid #eee;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    position: relative;
 }
 
-header .container {
+.header-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -53,9 +46,9 @@ header .container {
     color: inherit;
 }
 
-/* FIX: Forces the logo to remain professional and small */
+/* FIX: This keeps your logo exactly the right size */
 .header-logo {
-    height: 45px !important; 
+    height: 45px !important;
     width: auto;
     display: block;
 }
@@ -69,148 +62,72 @@ header .container {
 .logo-main {
     color: var(--primary-blue);
     font-weight: 800;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     line-height: 1;
 }
 
 .logo-sub {
     font-weight: 400;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     line-height: 1;
 }
 
 .header-tagline {
     display: block;
     font-size: 0.65rem;
-    color: var(--text-light);
-    text-transform: uppercase;
+    color: #777;
     letter-spacing: 2px;
     font-weight: bold;
     margin-top: 3px;
+    text-transform: uppercase;
 }
 
-/* --- NAVIGATION --- */
-nav ul {
+/* --- NAVIGATION MENU (From nav.html) --- */
+.nav-links {
+    display: flex;
     list-style: none;
     margin: 0;
     padding: 0;
+    gap: 25px;
+    align-items: center;
 }
 
+.nav-links li a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.nav-links li a:hover {
+    color: var(--primary-blue);
+}
+
+/* Specialized Button for Compiler */
 .nav-compiler-link {
     background: var(--primary-blue);
     color: var(--white) !important;
-    padding: 8px 20px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: background 0.3s ease;
+    padding: 8px 18px;
+    border-radius: 5px;
+    font-size: 0.85rem;
 }
 
-.nav-compiler-link:hover {
-    background: #003366;
+/* Mobile Toggler Logic (No JavaScript) */
+.nav-toggler {
+    display: none;
 }
 
-/* --- HERO SECTION --- */
-.catalog-hero {
-    background: var(--bg-light);
-    padding: 60px 0;
-    text-align: center;
-    border-bottom: 1px solid #eee;
+.nav-icon {
+    display: none;
+    cursor: pointer;
+    padding: 10px;
 }
 
-.catalog-hero h1 {
-    font-size: 2.2rem;
-    margin-bottom: 10px;
-    color: var(--primary-blue);
-}
-
-.catalog-hero p {
-    font-size: 1.1rem;
-    color: var(--text-light);
-}
-
-/* --- COURSE GRID --- */
-.course-catalog {
-    padding: 50px 0;
-}
-
-.course-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-}
-
-.course-card {
-    background: var(--white);
-    border: 1px solid #eee;
-    border-radius: 12px;
-    padding: 30px;
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-.course-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow);
-    border-color: var(--primary-blue);
-}
-
-.card-icon img {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 20px;
-}
-
-.course-card h3 {
-    margin: 10px 0;
-    color: var(--primary-blue);
-    font-size: 1.3rem;
-}
-
-.course-card p {
-    font-size: 0.95rem;
-    color: var(--text-light);
-}
-
-/* --- GLOBAL FOOTER --- */
-footer {
-    background: #222;
-    color: #eee;
-    padding: 40px 0;
-    text-align: center;
-    margin-top: 60px;
-}
-
-footer .container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.maint-link {
-    color: #00d2ff;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.maint-link:hover {
-    text-decoration: underline;
-}
-
-/* --- MOBILE RESPONSIVENESS --- */
-@media (max-width: 768px) {
-    header .container {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .catalog-hero h1 {
-        font-size: 1.8rem;
-    }
-}
+.nav-icon span, .nav-icon span::before, .nav-icon span::after {
+    content: '';
+    display: block;
+    background: var(--primary-blue);
+    height: 2px;
+    width: 25px;
+    position: relative;
