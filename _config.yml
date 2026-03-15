@@ -1,13 +1,16 @@
-# Site Settings
 title: Programming Course | Noor Academia
-description: Programming courses for students.
+description: Professional programming courses from C to Shell Scripting.
 url: "https://program.nooracademia.in"
 baseurl: ""
 
-# The Magic Connection
+# The Connection to your Vault
 remote_theme: nooracademia-owner/noor-vault-academia-in
 
-# Plugins
+# Essential Plugins
 plugins:
   - jekyll-remote-theme
   - jekyll-seo-tag
+
+# Ensure GitHub allows the theme to load
+whitelist:
+  - jekyll-remote-theme
