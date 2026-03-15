@@ -1,7 +1,9 @@
 ---
 ---
 /* Noor Academia: Modern Subdomain Styling */
-
+.nav-toggler {
+    display: none !important; /* This hides the checkbox you are seeing */
+}
 :root {
     --primary-blue: #0f172a;
     --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
