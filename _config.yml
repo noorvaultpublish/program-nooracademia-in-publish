@@ -1,30 +1,12 @@
 title: Programming Course | Noor Academia
-description: Programming courses for students by Noor Academia Team.
 url: "https://program.nooracademia.in"
-baseurl: "" # Keep this empty for subdomains
+baseurl: ""
 
-# The Magic Connection
-# This links your subdomain to the master templates in your vault
 remote_theme: nooracademia-owner/noor-vault-academia-in
 
-# Plugins
-# These must be listed here to activate the remote theme and SEO features
 plugins:
   - jekyll-remote-theme
   - jekyll-seo-tag
 
-# Security Whitelist
-# This tells GitHub Pages it is safe to load the theme from your vault repo
 whitelist:
   - jekyll-remote-theme
-
-# Build Settings
-markdown: kramdown
-highlighter: rouge
-exclude:
-  - Gemfile
-  - Gemfile.lock
-  - node_modules
-  - .vendor
-  - vendor/
-  - .github
