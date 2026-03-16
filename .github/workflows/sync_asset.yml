@@ -13,9 +13,9 @@ jobs:
 
       - name: Clone private repo
         run: |
-          git clone https://${{ secrets.APP_PRIVATE_KEY }}@github.com/nooracademia-owner/vault-noor-academia-in.git source
+          git clone https://${{ secrets.API_PRIVATE_TOKEN }}@github.com/nooracademia-owner/vault-noor-academia-in.git source
 
-      - name: Sync assets folder (ignore existing)
+      - name: Copy assets
         run: |
           mkdir -p assets
           rsync -av --ignore-existing source/assets/ assets/
