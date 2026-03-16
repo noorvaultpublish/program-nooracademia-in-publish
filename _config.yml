@@ -26,3 +26,6 @@ exclude:
   - .gitignore
   - gemfile
   - gemfile.lock
+  - node_modules
+  - vendor
+  - .vscode
