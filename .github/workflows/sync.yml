@@ -13,15 +13,22 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Push to Publish
-        env:
-          TOKEN: ${{ secrets.PUBLISH_P_TOKEN }}
+     - name: Pull and Merge from Source
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
           
-          # Use the token in the URL directly
-          git remote add target https://x-access-token:${TOKEN}@github.com/noorvaultpublish/program-nooracademia-in-publish.git
+          git remote add source https://x-access-token:${{ secrets.PUBLISH_P_TOKEN }}@github.com/nooracademia-owner/program-nooracademia.in.git
           
-          # Force push to the destination
-          git push target main:main --force
+          git fetch source main
+          git checkout main
+          
+          # Merge but don't commit yet
+          git merge source/main --allow-unrelated-histories --no-commit --no-ff
+          
+          # This command forces the workflows folder to stay exactly as it is in YOUR repo
+          git checkout HEAD .github/workflows/
+          
+          # Now commit the other code and push
+          git commit -m "Sync code only (ignoring workflows)" || echo "No changes"
+          git push origin main
