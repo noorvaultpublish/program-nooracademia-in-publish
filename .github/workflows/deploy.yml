@@ -13,6 +13,7 @@ permissions:
   id-token: write
 
 env:
+  # Ensures we use the latest Node environment for Actions
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
@@ -29,6 +30,7 @@ jobs:
         id: generate_token
         uses: actions/create-github-app-token@v1
         with:
+          # Ensure these variables are set in your Repo Settings > Secrets and Variables
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           repositories: "vault-noor-academia-in, program-nooracademia.in"
@@ -40,27 +42,29 @@ jobs:
           token: ${{ steps.generate_token.outputs.token }}
           path: temp_vault
 
-      - name: Sync Theme and Assets
+      - name: Sync Brand Components
         run: |
-          # Create all destination folders
-          mkdir -p assets/css assets/vault _layouts _includes _sass _data
-
-          # Sync Sass logic
-          if [ -d "temp_vault/_sass" ]; then cp -rfv temp_vault/_sass/* ./_sass/; fi
+          # 1. Create necessary folders
+          mkdir -p _layouts _includes _data assets/vault          
           
-          # Sync Theme Templates
-          if [ -d "temp_vault/_layouts" ]; then cp -rfv temp_vault/_layouts/* ./_layouts/; fi
-          if [ -d "temp_vault/_includes" ]; then cp -rfv temp_vault/_includes/* ./_includes/; fi
+          # 2. Sync templates and data from Private Vault
+          [ -d "temp_vault/_layouts" ] && cp -rf temp_vault/_layouts/* ./_layouts/
+          [ -d "temp_vault/_includes" ] && cp -rf temp_vault/_includes/* ./_includes/
+          [ -f "temp_vault/_data/vault.json" ] && cp -f temp_vault/_data/vault.json ./_data/
           
-          # Sync Data and Assets
-          if [ -f "temp_vault/_data/vault.json" ]; then cp -fv temp_vault/_data/vault.json ./_data/; fi
-          if [ -d "temp_vault/assets" ]; then cp -rfv temp_vault/assets/* ./assets/vault/; fi
+          # 3. Sync Logos/Icons into the specific vault assets folder
+          # This creates a path like: assets/vault/assets/logo/logo.png
+          [ -d "temp_vault/assets" ] && cp -rf temp_vault/assets/* ./assets/vault/
           
-          # VERIFICATION: List files to ensure main.scss is present
-          echo "Checking _sass folder content:"
-          ls -R _sass
+          # We DO NOT copy temp_vault/_sass or temp_vault/assets/css 
+          # so your local style.css remains the master.
           
+          # 4. Cleanup
           rm -rf temp_vault
+          
+          # 5. Debug Log: Verify local CSS exists
+          echo "--- Deployment Verification ---"
+          ls -l assets/css/style.css || echo "Check failed: local style.css missing!"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
