@@ -7,6 +7,7 @@ on:
     types: [vault_updated]
   workflow_dispatch:
 
+# Permissions for GitHub Pages
 permissions:
   contents: read
   pages: write
@@ -42,24 +43,26 @@ jobs:
           token: ${{ steps.generate_token.outputs.token }}
           path: temp_vault
 
-      # 3. Synchronize Theme, Data, and Assets (With Folder Existence Checks)
+      # 3. Synchronize Theme, Data, and Assets
       - name: Sync Theme and Assets
         run: |
-          # Ensure target directories exist
-          mkdir -p _layouts _includes _sass _data assets/vault
+          # Create all necessary destination folders
+          mkdir -p assets/css assets/vault _layouts _includes _sass _data
 
-          # Safely copy Theme folders if they exist in the Vault
-          if [ -d "temp_vault/_layouts" ]; then cp -rfv temp_vault/_layouts/* ./_layouts/; fi
-          if [ -d "temp_vault/_includes" ]; then cp -rfv temp_vault/_includes/* ./_includes/; fi
+          # Sync Sass logic (Required for assets/css/style.scss to work)
           if [ -d "temp_vault/_sass" ]; then cp -rfv temp_vault/_sass/* ./_sass/; fi
           
-          # Safely sync Global Data
+          # Sync Theme Templates
+          if [ -d "temp_vault/_layouts" ]; then cp -rfv temp_vault/_layouts/* ./_layouts/; fi
+          if [ -d "temp_vault/_includes" ]; then cp -rfv temp_vault/_includes/* ./_includes/; fi
+          
+          # Sync Global Data
           if [ -f "temp_vault/_data/vault.json" ]; then cp -fv temp_vault/_data/vault.json ./_data/; fi
           
-          # Safely sync Assets to the local root
+          # Sync All Assets (Icons, Images) to the vault subfolder
           if [ -d "temp_vault/assets" ]; then cp -rfv temp_vault/assets/* ./assets/vault/; fi
           
-          # Cleanup the temporary folder
+          # Cleanup
           rm -rf temp_vault
 
       # 4. Jekyll Build Process
