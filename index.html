@@ -13,12 +13,39 @@ title: Course Catalog
 
     <section class="course-catalog">
         <div class="container">
+            <h2 class="section-title">Available Courses</h2>
             <div class="course-grid">
-                <a href="/c" class="course-card">
-                    <div class="card-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt="C icon"></div>
-                    <h3>C Programming</h3>
-                    <p>Foundation of coding and memory management.</p>
-                </a>
+                {% for item in site.data.vault.courses %}
+                    {% if item.status == "available" %}
+                    <a href="/{{ item.slug }}" class="course-card">
+                        <div class="card-icon">
+                            <img src="{{ site.vault_url }}assets/icons/{{ item.icon }}" alt="{{ item.name }} Icon">
+                        </div>
+                        <h3>{{ item.name }}</h3>
+                        <p>{{ item.desc }}</p>
+                    </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="course-catalog coming-soon-section">
+        <div class="container">
+            <h2 class="section-title">Coming Soon</h2>
+            <div class="course-grid">
+                {% for item in site.data.vault.courses %}
+                    {% if item.status == "soon" %}
+                    <div class="course-card coming-soon">
+                        <span class="badge-soon">Coming Soon</span>
+                        <div class="card-icon">
+                            <img src="{{ site.vault_url }}assets/icons/{{ item.icon }}" alt="{{ item.name }} Icon">
+                        </div>
+                        <h3>{{ item.name }}</h3>
+                        <p>{{ item.desc }}</p>
+                    </div>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
     </section>
