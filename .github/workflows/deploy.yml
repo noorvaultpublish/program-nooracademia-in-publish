@@ -1,0 +1,49 @@
+name: Secure Deploy with GitHub App
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  sync-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Program Repo
+        uses: actions/checkout@v4
+
+      # --- This part replaces the Personal Access Token ---
+      - name: Generate Temporary Token
+        id: generate_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Checkout Private Vault
+        uses: actions/checkout@v4
+        with:
+          repository: nooracademia-owner/vault-noor-academia-in
+          token: ${{ steps.generate_token.outputs.token }}
+          path: temp_vault
+
+      # --- Sync Logic ---
+      - name: Sync Assets
+        run: |
+          mkdir -p assets/vault/icons
+          cp -r temp_vault/assets/icons/* assets/vault/icons/
+          cp temp_vault/_data/vault.json _data/vault.json
+          rm -rf temp_vault
+
+      # --- Rest of your Jekyll Build/Deploy steps ---
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
