@@ -1,20 +1,30 @@
-name: Secure Deploy with GitHub App
+name: Noor Academia Secure Deploy
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main"] # Triggers whenever you push to the Program repo
+  workflow_dispatch:      # Allows you to manually trigger a sync/deploy
+
+# Permissions needed for GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  sync-and-deploy:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Program Repo
         uses: actions/checkout@v4
 
-      # --- This part replaces the Personal Access Token ---
+      # 1. Generate a temporary token using your GitHub App
       - name: Generate Temporary Token
         id: generate_token
         uses: actions/create-github-app-token@v1
@@ -22,6 +32,7 @@ jobs:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
+      # 2. Checkout the Private Vault using the temporary token
       - name: Checkout Private Vault
         uses: actions/checkout@v4
         with:
@@ -29,21 +40,40 @@ jobs:
           token: ${{ steps.generate_token.outputs.token }}
           path: temp_vault
 
-      # --- Sync Logic ---
-      - name: Sync Assets
+      # 3. Sync Theme, Data, and Assets
+      - name: Sync Theme and Assets
         run: |
-          mkdir -p assets/vault/icons
-          cp -r temp_vault/assets/icons/* assets/vault/icons/
-          cp temp_vault/_data/vault.json _data/vault.json
+          # Sync Theme Folders (Layouts, Includes, Sass)
+          # We use 'cp -rf' to overwrite existing files with Vault versions
+          cp -rf temp_vault/_layouts .
+          cp -rf temp_vault/_includes .
+          cp -rf temp_vault/_sass .
+          
+          # Sync Data (Content JSON)
+          mkdir -p _data
+          cp -f temp_vault/_data/vault.json _data/vault.json 2>/dev/null || echo "No vault.json found"
+          
+          # Sync Assets (Icons/Images) to the Root Vault Folder
+          mkdir -p assets/vault
+          cp -rf temp_vault/assets/* assets/vault/
+          
+          # Clean up the temporary clone
           rm -rf temp_vault
 
-      # --- Rest of your Jekyll Build/Deploy steps ---
+      # 4. Standard Jekyll Build Process
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
+
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
           source: ./
           destination: ./_site
+
+      # 5. Deploy to GitHub Pages
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
