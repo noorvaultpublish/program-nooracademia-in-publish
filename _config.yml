@@ -24,8 +24,8 @@ exclude:
   - README.md
   - LICENSE
   - .gitignore
-  - gemfile
-  - gemfile.lock
+  - Gemfile
+  - Gemfile.lock
   - node_modules
   - vendor
   - .vscode
