@@ -44,27 +44,25 @@ jobs:
 
       - name: Sync Brand Components
         run: |
-          # 1. Create necessary folders
-          mkdir -p _layouts _includes _data assets/vault          
+          # 1. Create the folders. -p ensures they are created only if missing.
+          mkdir -p _layouts _includes _data assets/vault/assets
           
-          # 2. Sync templates and data from Private Vault
+          # 2. Sync templates and data
           [ -d "temp_vault/_layouts" ] && cp -rf temp_vault/_layouts/* ./_layouts/
           [ -d "temp_vault/_includes" ] && cp -rf temp_vault/_includes/* ./_includes/
           [ -f "temp_vault/_data/vault.json" ] && cp -f temp_vault/_data/vault.json ./_data/
           
-          # 3. Sync Logos/Icons into the specific vault assets folder
-          # This creates a path like: assets/vault/assets/logo/logo.png
-          [ -d "temp_vault/assets" ] && cp -rf temp_vault/assets/* ./assets/vault/
+          # 3. Sync Logos/Icons/Images
+          # This copies the CONTENT of Vault/assets/ into Local/assets/vault/assets/
+          if [ -d "temp_vault/assets" ]; then
+            cp -rf temp_vault/assets/* ./assets/vault/assets/
+          fi
           
-          # We DO NOT copy temp_vault/_sass or temp_vault/assets/css 
-          # so your local style.css remains the master.
+          # 4. Verification: Look for the icon in the logs
+          echo "--- Content of assets/vault/assets ---"
+          ls -R assets/vault/assets/
           
-          # 4. Cleanup
           rm -rf temp_vault
-          
-          # 5. Debug Log: Verify local CSS exists
-          echo "--- Deployment Verification ---"
-          ls -l assets/css/style.css || echo "Check failed: local style.css missing!"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
