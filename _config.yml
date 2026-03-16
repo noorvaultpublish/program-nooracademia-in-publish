@@ -2,9 +2,11 @@
 title: Programming Course | Noor Academia
 url: "https://nooracademia-owner.github.io"
 baseurl: "/program-nooracademia.in"  # This is the folder name on GitHub
+# Noor Academia Vault Configuration
+vault_url: "https://raw.githubusercontent.com/nooracademia-owner/vault-noor-academia-in/main/"
 
 # The Global Vault Connection
-remote_theme: nooracademia-owner/noor-vault-academia-in
+theme: null
 
 # Plugins
 plugins:
