@@ -1,0 +1,26 @@
+name: Push to Publish Repo
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  push-to-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to Destination Repo
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          
+          # Add the destination repo as a remote
+          git remote add destination https://x-access-token:${{ secrets.PUBLISH_P_TOKEN }}@github.com/noorvaultpublish/program-nooracademia-in-publish.git
+          
+          # Force push the main branch to the publish repo
+          git push destination main --force
