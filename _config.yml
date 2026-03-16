@@ -1,19 +1,28 @@
-title: Programming Course | Noor Academia
-url: "https://nooracademia.in"
-baseurl: "/program-nooracademia.in"
+# Site Settings
+title: Noor Academia Vault
+description: Centralized template and design assets for Noor Academia subdomains.
+url: "https://nooracademia-owner.github.io"
+baseurl: "/vault-noor-academia-in" # Matches the GitHub repository name
 
-# Disable default themes
-theme: null
+# Personalization
+author:
+  name: Noor Academia Team
+  email: info@nooracademia.in
 
-# Path for synced icons from Vault
-vault_url: "/assets"
+# --- Custom Variable ---
+# Even inside the vault, defining this allows you to test paths locally
+vault_url: "https://raw.githubusercontent.com/nooracademia-owner/vault-noor-academia-in/main/"
 
-plugins:
-  - jekyll-seo-tag
+# Build Settings
+markdown: kramdown
+# Since this IS the vault, you don't need a remote theme here
+theme: minima 
 
-# Keep including these so your Vault-synced layouts work
-include:
-  - _data
-  - _layouts
-  - _includes
-  - assets
+# Folder Exclusions
+exclude:
+  - .obsidian/    # Keeps your Obsidian settings private
+  - README.md
+  - LICENSE
+  - .gitignore
+  - gemfile
+  - gemfile.lock
