@@ -15,8 +15,14 @@ jobs:
 
       - name: Push to Publish
         env:
-          # This securely passes the token to the shell environment
           TOKEN: ${{ secrets.PUBLISH_P_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          # Standardizing the remote URL format
+          git remote add target https://x-access-token:${TOKEN}@github.com/noorvaultpublish/program-nooracademia-in-publish.git
+          git push target main:main --force
+          
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
