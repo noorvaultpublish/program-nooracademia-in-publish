@@ -15,10 +15,22 @@
     <div id="layout-wrapper"></div>
 
     <template id="page-content"> <!-- This content will be injected into #main-content of the loaded template -->
-        <section class="catalog-hero">
+        <section class="announcement-bar">
             <div class="container">
-                <h1>New Courses Coming Soon!</h1>
-                <p>We're working hard to bring you an exciting new catalog of programming courses. Please check back shortly.</p>
+                <p>Exciting News! All courses are launching soon. Get ready to start your learning journey!</p>
+                <button class="dismiss-banner-btn" aria-label="Dismiss announcement">&times;</button>
+            </div>
+        </section>
+        <section class="search-section">
+            <div class="container">
+                <input type="text" id="course-search-input" placeholder="Search for courses by title...">
+            </div>
+        </section>
+        <section class="course-catalog">
+            <div class="container" style="display: block;">
+                <div class="course-grid" id="course-grid-container">
+                    <!-- Course cards will be dynamically inserted here by loader.js -->
+                </div>
             </div>
         </section>
     </template>

@@ -39,17 +39,31 @@ header {
 .logo-link { 
     text-decoration: none; 
     display: flex; 
-    align-items: center; 
+    align-items: center;
+    transition: transform 0.3s ease; /* Add transition for scaling effect */
+}
+
+.logo-link:hover {
+    transform: scale(1.03); /* Add a subtle scale effect on hover */
 }
 
 .header-logo { 
     height: 50px; 
-    width: auto; 
+    width: auto;
+    transition: filter 0.3s ease; /* Add transition for glow effect */
+}
+
+.logo-link:hover .header-logo {
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.7)); /* Add a golden glow to the image on hover */
 }
 
 .logo-text-wrapper { 
     margin-left: 12px; 
     line-height: 1.2; 
+}
+
+.logo-text-wrapper > div {
+    /* The box style has been removed for a cleaner, more modern look. */
 }
 
 .logo-main { 
@@ -77,6 +91,7 @@ header {
     text-transform: uppercase;
     letter-spacing: 3px;
     font-weight: 600;
+    margin-top: 4px; /* Add a little space between the main logo text and the tagline */
 }
 
 /* Navigation Menu Fixes */
@@ -170,6 +185,83 @@ nav .nav-links li a:hover {
     }
 }
 
+/* --- Announcement Bar Styling --- */
+.announcement-bar {
+    background-color: var(--brand-gold);
+    color: var(--primary-blue);
+    text-align: center;
+    padding: 12px 20px;
+    font-weight: 600;
+    transition: all 0.4s ease-out;
+    max-height: 100px; /* Initial height for transition */
+    overflow: hidden;
+}
+
+.announcement-bar.dismissed {
+    padding-top: 0;
+    padding-bottom: 0;
+    max-height: 0;
+    opacity: 0;
+}
+
+.announcement-bar .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.announcement-bar p {
+    margin: 0;
+    padding: 0 40px; /* Add space for the dismiss button */
+}
+
+.dismiss-banner-btn {
+    background: transparent;
+    border: none;
+    color: var(--primary-blue);
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.dismiss-banner-btn:hover {
+    opacity: 1;
+}
+
+/* --- Search Bar Styling --- */
+.search-section {
+    padding: 40px 0 0 0; /* Padding top, no padding bottom */
+    background-color: var(--bg-light);
+}
+
+.search-section .container {
+    display: block; /* Override flex to allow full width input */
+}
+
+#course-search-input {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: 1px solid #dfe6e9;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+#course-search-input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+}
+
 /* --- Course Catalog Grid --- */
 .course-catalog { padding: 50px 0; }
 .course-grid { 
@@ -197,7 +289,31 @@ nav .nav-links li a:hover {
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15); 
 }
 
-/* --- Coming Soon Badge --- */
+.card-icon {
+    background-color: transparent; /* Remove background to show image clearly */
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.card-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ensures the whole icon is visible */
+}
+
+.card-icon.icon-fallback {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* --- Course Card Badges --- */
 .course-card.coming-soon {
     opacity: 0.8;
     pointer-events: none;
@@ -215,6 +331,28 @@ nav .nav-links li a:hover {
     border-radius: 4px;
     text-transform: uppercase;
     letter-spacing: 1px;
+}
+
+.badge-available {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #27ae60; /* A professional, accessible green */
+    color: var(--white);
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.no-courses-found {
+    text-align: center;
+    color: var(--text-dark);
+    grid-column: 1 / -1; /* Make it span all columns in the grid */
+    font-size: 1.1rem;
+    padding: 40px 0;
 }
 
 /* --- Poppins Local Fonts (v24 Latin) --- */
@@ -290,17 +428,88 @@ footer .maint-link:hover {
         text-align: center; /* Center text for all items when stacked */
     }
 }
-/* Mobile Responsiveness for Large Menu */
+
+/* --- Overlay for Mobile Menu --- */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 999; /* Below menu, above content */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease-in-out;
+}
+
+body.menu-open {
+    overflow: hidden; /* Prevent scrolling when menu is open */
+}
+
+/* --- Mobile Navigation --- */
+.menu-toggle {
+    display: none; /* Hidden by default on desktop */
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001; /* Above the nav panel */
+}
+
+.menu-toggle span {
+    width: 100%;
+    height: 3px;
+    background-color: var(--white);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
 @media (max-width: 1024px) {
-    .container {
-        flex-direction: column;
-        padding: 10px 20px;
+    /* Make hamburger visible */
+    .menu-toggle {
+        display: flex;
     }
-    
+
+    /* Hide desktop nav and prepare for mobile view */
     .nav-links {
-        flex-wrap: wrap; /* Allows menu to wrap on smaller screens */
+        position: fixed;
+        top: 0;
+        right: -100%; /* Start off-screen */
+        width: 300px;
+        height: 100vh;
+        background-color: var(--primary-blue);
+        box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+        flex-direction: column;
         justify-content: center;
-        margin-top: 10px;
-        gap: 12px;
+        align-items: center;
+        gap: 30px;
+        transition: right 0.4s ease-in-out;
+    }
+
+    /* Active state for mobile nav */
+    .nav-links.nav-active {
+        right: 0;
+    }
+
+    /* Hamburger animation to 'X' */
+    .menu-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(7px, 7px);
+    }
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .menu-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+    }
+
+    /* Show overlay when menu is open */
+    body.menu-open .overlay {
+        opacity: 1;
+        visibility: visible;
     }
 }
