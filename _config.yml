@@ -2,21 +2,22 @@ title: Programming Course | Noor Academia
 url: "https://nooracademia.in"
 baseurl: ""
 
-# Disable default themes to use our Vault theme
+# Disable default themes
 theme: null
 
-# Explicitly point to the local folder synced from the Vault
+# --- THE CRITICAL FIX ---
 sass:
   sass_dir: _sass
   style: compressed
+# ------------------------
 
-# Root path for synced assets (icons, etc.)
+# Path for synced icons
 vault_url: "/assets/vault"
 
 plugins:
   - jekyll-seo-tag
 
-# Ensure Jekyll includes all the folders we are syncing
+# Ensure Jekyll doesn't ignore our synced folders
 include:
   - _data
   - _layouts
