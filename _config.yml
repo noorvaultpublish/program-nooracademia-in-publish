@@ -5,22 +5,15 @@ baseurl: ""
 # Disable default themes
 theme: null
 
-# --- THE CRITICAL FIX ---
-sass:
-  sass_dir: _sass
-  style: compressed
-# ------------------------
-
-# Path for synced icons
+# Path for synced icons from Vault
 vault_url: "/assets/vault"
 
 plugins:
   - jekyll-seo-tag
 
-# Ensure Jekyll doesn't ignore our synced folders
+# Keep including these so your Vault-synced layouts work
 include:
   - _data
   - _layouts
   - _includes
-  - _sass
   - assets
