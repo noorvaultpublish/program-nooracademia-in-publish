@@ -1,0 +1,287 @@
+/* Noor Academia: Modern Subdomain Styling */
+
+:root {
+    --primary-blue: #0f172a;
+    --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --text-dark: #2d3436;
+    --bg-light: #f8fafd;
+    --white: #ffffff;
+    --brand-gold: #FFD700;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: var(--text-dark);
+    background-color: var(--bg-light);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    /* Ensure flex works when used in header */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* --- Header Implementation --- */
+header {
+    background: var(--primary-blue);
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo-link { 
+    text-decoration: none; 
+    display: flex; 
+    align-items: center; 
+}
+
+.header-logo { 
+    height: 50px; 
+    width: auto; 
+}
+
+.logo-text-wrapper { 
+    margin-left: 12px; 
+    line-height: 1.2; 
+}
+
+.logo-main { 
+    color: var(--white); 
+    font-weight: 800; 
+    font-size: 1.5rem; 
+}
+
+.logo-sub {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 300;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+}
+
+.logo-sub sup {
+    font-size: 0.5em;
+    opacity: 0.8;
+}
+
+.header-tagline {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--brand-gold);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 600;
+}
+
+/* Navigation Menu Fixes */
+nav .nav-links { /* Target the ul with class nav-links directly */
+    list-style: none; 
+    display: flex; 
+    gap: 18px; /* Consistent gap */
+    margin: 0; 
+    padding: 0;
+    align-items: center;
+    z-index: 1000; /* Ensures it sits above other layers */
+}
+
+nav .nav-links li a { /* Target all nav links */
+    text-decoration: none; 
+    color: var(--white); 
+    font-weight: 600; 
+    font-size: 0.95rem;
+    display: block; /* Make them block-level for padding to work */
+    padding: 6px 14px; /* Add padding to make them button-like */
+    border-radius: 4px; /* Add rounded corners */
+    transition: all 0.3s ease; /* Smooth transitions for all properties */
+    box-sizing: border-box; /* Include padding in element's total width/height */
+    background-color: transparent; /* Default transparent background */
+}
+
+/* YouTube-style hover for general nav links (non-compiler) */
+nav .nav-links li a:hover {
+    background-color: #FF0000; /* YouTube Red */
+    color: var(--white) !important; /* Ensure text stays white on hover */
+    transform: translateY(-2px); /* Slight lift */
+}
+
+/* Style for the active menu item on the "program" page */
+.nav-links li a.active-program-link {
+    background-color: rgba(4, 1, 20, 0.849);;
+    color: rgba(226, 193, 3, 0.849); !important;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    font-size: 0.85rem !important;
+    box-shadow: 0 5px 10px rgba(226, 193, 3, 0.849);
+    transition: all 0.3s ease; /* Transition is kept for other potential states, but hover is disabled */
+    pointer-events: none; /* Disable hover effect and prevent clicks */
+}
+
+/* --- Course Catalog Grid --- */
+.course-catalog { padding: 50px 0; }
+.course-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 25px; 
+}
+
+.course-card {
+    background: white;
+    text-decoration: none;
+    color: var(--text-dark);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease;
+    border-top: 5px solid var(--primary-blue);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.course-card:hover { 
+    transform: translateY(-8px); 
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15); 
+}
+
+/* --- Coming Soon Badge --- */
+.course-card.coming-soon {
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.badge-soon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--brand-gold);
+    color: var(--primary-blue);
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- Poppins Local Fonts (v24 Latin) --- */
+
+/* Light - 300 */
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-v24-latin-300.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Regular - 400 (Using your v20 regular as it matches the set) */
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-v20-latin-regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Semi-Bold - 600 (Good for Sub-headers) */
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-v24-latin-600.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Bold - 700 (For Logo "NOOR" and Main Headers) */
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/poppins-v24-latin-700.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* --- Branding Styles --- */
+
+:root {
+    --primary-blue: #0f172a;
+    --brand-gold: #FFD700;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+}
+
+.logo-main {
+    font-weight: 700; /* Uses poppins-v24-latin-700 */
+    color: #ffffff;
+}
+
+.logo-sub {
+    font-weight: 300; /* Uses poppins-v24-latin-300 for that elegant thin look */
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.header-tagline {
+    font-weight: 600; /* Uses poppins-v24-latin-600 */
+    color: var(--brand-gold);
+    letter-spacing: 3px;
+}
+
+/* --- Footer Styling --- */
+footer {
+    padding: 40px 0;
+    background-color: var(--primary-blue); /* Matching header background */
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1); /* Shadow on top, matching header style */
+    margin-top: 50px;
+    color: var(--white); /* White text for contrast on dark background */
+    font-size: 0.9rem;
+}
+
+/* The .container within the footer already handles flex layout */
+/* We just need to style the content within those divs */
+footer .container > div {
+    /* This targets the two direct children divs of the footer's container */
+    /* On larger screens, they will be spaced out by the .container's justify-content: space-between */
+}
+
+footer .maint-link {
+    color: var(--brand-gold); /* Using brand gold for contrast */
+    text-decoration: none;
+    font-weight: 600;
+}
+
+footer .maint-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments for footer */
+@media (max-width: 768px) {
+    footer .container {
+        flex-direction: column; /* Stack items vertically */
+        gap: 10px; /* Add some space between stacked items */
+        text-align: center; /* Center text for all items when stacked */
+    }
+}
+/* Mobile Responsiveness for Large Menu */
+@media (max-width: 1024px) {
+    .container {
+        flex-direction: column;
+        padding: 10px 20px;
+    }
+    
+    .nav-links {
+        flex-wrap: wrap; /* Allows menu to wrap on smaller screens */
+        justify-content: center;
+        margin-top: 10px;
+        gap: 12px;
+    }
+}
