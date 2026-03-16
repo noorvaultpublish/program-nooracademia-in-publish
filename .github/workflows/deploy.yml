@@ -44,45 +44,35 @@ jobs:
 
       - name: Sync Brand Components
         run: |
-          # 1. Create standard Jekyll folders
+          # 1. Ensure target directories exist locally
           mkdir -p _layouts _includes _data assets
           
-          # 2. Sync templates and data
+          # 2. THE FIX: Explicitly sync known high-priority folders first
           [ -d "temp_vault/_layouts" ] && cp -rf temp_vault/_layouts/* ./_layouts/
           [ -d "temp_vault/_includes" ] && cp -rf temp_vault/_includes/* ./_includes/
           [ -f "temp_vault/_data/vault.json" ] && cp -f temp_vault/_data/vault.json ./_data/
           
-          # 3. THE FIX: Merge Vault assets directly into /assets/
-          # This takes everything INSIDE temp_vault/assets/ and puts it in ./assets/
+          # 3. DYNAMIC ASSET MERGE
+          # This ensures vault/assets contents move into ./assets/ without nesting
           if [ -d "temp_vault/assets" ]; then
-            cp -rf temp_vault/assets/* ./assets/
+            cp -rfv temp_vault/assets/* ./assets/
           fi
-          
-          # 4. Verification: Look for the files in the logs
-          echo "--- Content of local assets folder ---"
-          ls -R assets/
-          
-          rm -rf temp_vault
 
-          # 1. SCAN & CREATE FOLDERS
-          # Find all directories in temp_vault (excluding .git) and recreate them locally
+          # 4. SCAN & REPLICATE REMAINING STRUCTURE
+          # Recreates any other custom directories found in the vault
           cd temp_vault
-          find . -type d -not -path '*/.*' | while read dir; do
-            mkdir -p "../$dir"
-          done
+          find . -type d -not -path '*/.*' -exec mkdir -p "../{}" \;
           cd ..
 
-          # 2. DYNAMIC SYNC
-          # Move everything from the Vault into the root, merging with local files
-          # We use 'dot' notation to copy contents specifically
+          # 5. FINAL GLOBAL MERGE
+          # Copies everything else (root files, etc.) from vault to project root
           cp -rfv temp_vault/. ./
           
-          # 3. CLEANUP
-          # Remove the temp_vault and the extra .git folder that was copied
+          # 6. CLEANUP
+          # Delete temp_vault ONLY after all copying is finished
           rm -rf temp_vault
           
-          # 4. VERIFICATION
-          # See the final merged structure in your logs
+          # 7. VERIFICATION
           echo "--- Merged Structure Created ---"
           ls -R _layouts/ _includes/ assets/
 
