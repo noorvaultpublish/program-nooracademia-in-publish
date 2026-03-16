@@ -1,5 +1,4 @@
 # 1. Update the file content with the correct secret name
-@'
 name: Sync to Publish Repo
 on:
   push:
