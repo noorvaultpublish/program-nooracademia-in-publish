@@ -1,17 +1,22 @@
-# Site Settings
 title: Programming Course | Noor Academia
-url: "https://nooracademia-owner.github.io"
-baseurl: "/program-nooracademia.in"  # This is the folder name on GitHub
-# Noor Academia Vault Configuration
-vault_url: "https://raw.githubusercontent.com/nooracademia-owner/vault-noor-academia-in/main/"
+url: "https://nooracademia.in"
+baseurl: ""
 
-# The Global Vault Connection
-remote_theme: nooracademia-owner/vault-noor-academia-in
+# Root path for synced assets (icons, etc.)
+vault_url: "/assets/vault"
 
-# Plugins
+# --- IMPORTANT: REMOVE REMOTE THEME ---
+# remote_theme: nooracademia-owner/vault-noor-academia-in
+# --------------------------------------
+
+# Plugins: Remove jekyll-remote-theme
 plugins:
-  - jekyll-remote-theme
   - jekyll-seo-tag
 
-whitelist:
-  - jekyll-remote-theme
+# Ensure Jekyll includes the synced folders
+include:
+  - _data
+  - _layouts
+  - _includes
+  - _sass
+  - assets
