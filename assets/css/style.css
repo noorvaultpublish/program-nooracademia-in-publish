@@ -124,6 +124,52 @@ nav .nav-links li a:hover {
     pointer-events: none; /* Disable hover effect and prevent clicks */
 }
 
+/* --- Hero Section Styling --- */
+.catalog-hero {
+    background: linear-gradient(270deg, var(--primary-blue), #1e293b, #0f172a);
+    background-size: 400% 400%;
+    color: var(--white);
+    padding: 120px 20px;
+    text-align: center;
+    animation: gradient-animation 15s ease infinite;
+}
+
+/* Override the default flex behavior for the hero container */
+.catalog-hero .container {
+    display: block;
+}
+
+.catalog-hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    animation: text-glow 2.5s infinite alternate ease-in-out;
+}
+
+.catalog-hero p {
+    font-size: 1.2rem;
+    font-weight: 300;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.9;
+}
+
+/* Keyframe Animations for Hero Section */
+@keyframes gradient-animation {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
+@keyframes text-glow {
+    from {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+    to {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 215, 0, 0.7);
+    }
+}
+
 /* --- Course Catalog Grid --- */
 .course-catalog { padding: 50px 0; }
 .course-grid { 
