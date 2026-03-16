@@ -16,6 +16,5 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          # Updated URL to the specific destination repo
-          git remote add target https://x-access-token:${{ secrets.PUBLISH_P_TOKEN }}@github.com/noorvaultpublish/program-nooracademia-in-publish.git
+          git remote add target https://${{ secrets.PUBLISH_P_TOKEN }}@github.com/noorvaultpublish/program-nooracademia-in-publish.git
           git push target main:main --force
