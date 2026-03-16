@@ -3,7 +3,7 @@ name: Copy assets from vault
 on:
   workflow_dispatch:
 
-  permissions: write
+  permissions:
   contents: write
 
 jobs:
