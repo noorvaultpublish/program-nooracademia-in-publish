@@ -1,4 +1,5 @@
-name: Push to Publish Repo
+name: Push and Trigger Remote
+
 on:
   push:
     branches:
@@ -6,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  push-to-publish:
+  push-and-dispatch:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source
@@ -14,13 +15,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Push to Destination Repo
+      - name: Push to Destination
+        env:
+          TOKEN: ${{ secrets.PUBLISH_P_TOKEN }}
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          
-          # Add the destination repo as a remote
-          git remote add destination https://x-access-token:${{ secrets.PUBLISH_P_TOKEN }}@github.com/noorvaultpublish/program-nooracademia-in-publish.git
-          
-          # Force push the main branch to the publish repo
+          git remote add destination https://x-access-token:${TOKEN}@github.com/noorvaultpublish/program-nooracademia-in-publish.git
           git push destination main --force
+
+      - name: Remote Workflow Trigger
+        env:
+          TOKEN: ${{ secrets.PUBLISH_P_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $TOKEN" \
+            https://api.github.com/repos/noorvaultpublish/program-nooracademia-in-publish/dispatches \
+            -d '{"event_type": "trigger_from_main"}'
