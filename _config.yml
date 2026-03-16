@@ -6,7 +6,7 @@ baseurl: "/program-nooracademia.in"
 theme: null
 
 # Path for synced icons from Vault
-vault_url: "/assets/vault"
+vault_url: "/assets"
 
 plugins:
   - jekyll-seo-tag
