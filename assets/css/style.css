@@ -10,11 +10,13 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
     color: var(--text-dark);
     background-color: var(--bg-light);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
 }
 
 .container {
@@ -110,8 +112,8 @@ nav .nav-links li a:hover {
 
 /* Style for the active menu item on the "program" page */
 .nav-links li a.active-program-link {
-    background-color: rgba(4, 1, 20, 0.849);;
-    color: rgba(226, 193, 3, 0.849); !important;
+    background-color: rgba(4, 1, 20, 0.849);
+    color: rgba(226, 193, 3, 0.849) !important;
     padding: 8px 18px;
     border-radius: 4px;
     font-weight: 600 !important;
@@ -120,6 +122,52 @@ nav .nav-links li a:hover {
     box-shadow: 0 5px 10px rgba(226, 193, 3, 0.849);
     transition: all 0.3s ease; /* Transition is kept for other potential states, but hover is disabled */
     pointer-events: none; /* Disable hover effect and prevent clicks */
+}
+
+/* --- Hero Section Styling --- */
+.catalog-hero {
+    background: linear-gradient(270deg, var(--primary-blue), #1e293b, #0f172a);
+    background-size: 400% 400%;
+    color: var(--white);
+    padding: 120px 20px;
+    text-align: center;
+    animation: gradient-animation 15s ease infinite;
+}
+
+/* Override the default flex behavior for the hero container */
+.catalog-hero .container {
+    display: block;
+}
+
+.catalog-hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    animation: text-glow 2.5s infinite alternate ease-in-out;
+}
+
+.catalog-hero p {
+    font-size: 1.2rem;
+    font-weight: 300;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.9;
+}
+
+/* Keyframe Animations for Hero Section */
+@keyframes gradient-animation {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
+@keyframes text-glow {
+    from {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+    to {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 215, 0, 0.7);
+    }
 }
 
 /* --- Course Catalog Grid --- */
@@ -205,35 +253,6 @@ nav .nav-links li a:hover {
     font-weight: 700;
     font-style: normal;
     font-display: swap;
-}
-
-/* --- Branding Styles --- */
-
-:root {
-    --primary-blue: #0f172a;
-    --brand-gold: #FFD700;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
-    -webkit-font-smoothing: antialiased;
-}
-
-.logo-main {
-    font-weight: 700; /* Uses poppins-v24-latin-700 */
-    color: #ffffff;
-}
-
-.logo-sub {
-    font-weight: 300; /* Uses poppins-v24-latin-300 for that elegant thin look */
-    color: rgba(255, 255, 255, 0.85);
-}
-
-.header-tagline {
-    font-weight: 600; /* Uses poppins-v24-latin-600 */
-    color: var(--brand-gold);
-    letter-spacing: 3px;
 }
 
 /* --- Footer Styling --- */

@@ -8,41 +8,39 @@ async function initNoorPage() {
     }
 
     try {
-        // 1. Fetch all HTML parts
-        const headerResponse = await fetch('templates/header.html');
-        if (!headerResponse.ok) throw new Error('Header file not found at /templates/header.html');
-
-        const menuResponse = await fetch('templates/menu.html');
-        if (!menuResponse.ok) throw new Error('Menu file not found at /templates/menu.html');
-
-        const response = await fetch('templates/default.html');
-        if (!response.ok) throw new Error('Template file not found at /templates/default.html');
-
-        const footerResponse = await fetch('templates/footer.html');
-        if (!footerResponse.ok) throw new Error('Footer file not found at /templates/footer.html');
+        // 1. Fetch all HTML parts in parallel for faster loading
+        const responses = await Promise.all([
+            fetch('./templates/header.html'),
+            fetch('./templates/menu.html'),
+            fetch('./templates/default.html'),
+            fetch('./templates/footer.html')
+        ]);
         
-        let headerHtml = await headerResponse.text(); // Use 'let' because we'll modify it
-        const menuHtml = await menuResponse.text();
-        const templateHtml = await response.text();
-        const footerHtml = await footerResponse.text();
+        // 2. Check all responses for errors
+        const [headerResponse, menuResponse, defaultResponse, footerResponse] = responses;
+        if (!headerResponse.ok) throw new Error('Header file not found');
+        if (!menuResponse.ok) throw new Error('Menu file not found');
+        if (!defaultResponse.ok) throw new Error('Default template not found');
+        if (!footerResponse.ok) throw new Error('Footer file not found');
 
-        // Inject menuHtml into headerHtml before combining
-        const parser = new DOMParser();
-        const headerDoc = parser.parseFromString(headerHtml, 'text/html');
-        const navElement = headerDoc.querySelector('nav');
-        if (navElement) {
-            navElement.innerHTML = menuHtml; // Inject menu content
-            headerHtml = headerDoc.body.innerHTML; // Get the modified header HTML
+        // 3. Get text from all responses in parallel
+        let [headerHtml, menuHtml, templateHtml, footerHtml] = await Promise.all(
+            responses.map(res => res.text())
+        );
+
+        // 4. More performant menu injection using string replacement instead of DOMParser
+        if (headerHtml.includes('<!--MENU_PLACEHOLDER-->')) {
+            headerHtml = headerHtml.replace('<!--MENU_PLACEHOLDER-->', menuHtml);
         } else {
-            console.warn("Warning: <nav> element not found in header.html. Menu might not be injected correctly.");
+            console.warn("Warning: <!--MENU_PLACEHOLDER--> not found in header.html. Menu will not be injected.");
         }
 
         const combinedHtml = headerHtml + templateHtml + footerHtml;
         
-        // 2. Inject the template
+        // 5. Inject the final combined HTML
         layoutWrapper.innerHTML = combinedHtml;
 
-        // 3. SECURE RENDER: Wait for the browser to recognize the new HTML
+        // 6. SECURE RENDER: Wait for the browser to recognize the new HTML
         // We use requestAnimationFrame to ensure the DOM has updated
         requestAnimationFrame(() => {
             const renderArea = document.getElementById('main-content'); // Changed to target main-content as per template
