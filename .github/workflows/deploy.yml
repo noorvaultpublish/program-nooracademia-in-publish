@@ -46,6 +46,14 @@ jobs:
         run: |
           # 1. Create standard Jekyll folders
           mkdir -p _layouts _includes _data assets
+
+          # 1. SCAN & CREATE FOLDERS
+          # Find all directories in temp_vault (excluding .git) and recreate them locally
+          cd temp_vault
+          find . -type d -not -path '*assets/.*' | while read dir; do
+            mkdir -p "../$dir"
+          done
+          cd ..
           
           # 2. Sync templates and data
           [ -d "temp_vault/_layouts" ] && cp -rf temp_vault/_layouts/* ./_layouts/
