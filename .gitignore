@@ -1,0 +1,10 @@
+# Jekyll & Sass build artifacts and cache
+# These files are generated automatically and should not be in version control.
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+
+# Project-specific folders to ignore
+# The 'backup' folder contains utility scripts, not website source code.
+backup/
