@@ -2,22 +2,19 @@ title: Programming Course | Noor Academia
 url: "https://nooracademia.in"
 baseurl: ""
 
-# Root path for synced assets (icons, etc.)
-vault_url: "/assets/vault"
-
-# --- IMPORTANT: REMOVE REMOTE THEME ---
-# remote_theme: nooracademia-owner/vault-noor-academia-in
-# --------------------------------------
-
-# Plugins: Remove jekyll-remote-theme
-plugins:
-  - jekyll-seo-tag
-
+# Tell Jekyll where to find the synced Sass files from the Vault
 sass:
   sass_dir: _sass
   style: compressed
 
-# Ensure Jekyll includes the synced folders
+# Root path for synced assets (icons, etc.)
+vault_url: "/assets/vault"
+
+# Standard Jekyll Plugins
+plugins:
+  - jekyll-seo-tag
+
+# Ensure Jekyll includes all the folders we are syncing from the Private Vault
 include:
   - _data
   - _layouts
