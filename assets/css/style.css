@@ -10,11 +10,13 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
     color: var(--text-dark);
     background-color: var(--bg-light);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
 }
 
 .container {
@@ -110,8 +112,8 @@ nav .nav-links li a:hover {
 
 /* Style for the active menu item on the "program" page */
 .nav-links li a.active-program-link {
-    background-color: rgba(4, 1, 20, 0.849);;
-    color: rgba(226, 193, 3, 0.849); !important;
+    background-color: rgba(4, 1, 20, 0.849);
+    color: rgba(226, 193, 3, 0.849) !important;
     padding: 8px 18px;
     border-radius: 4px;
     font-weight: 600 !important;
@@ -205,35 +207,6 @@ nav .nav-links li a:hover {
     font-weight: 700;
     font-style: normal;
     font-display: swap;
-}
-
-/* --- Branding Styles --- */
-
-:root {
-    --primary-blue: #0f172a;
-    --brand-gold: #FFD700;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
-    -webkit-font-smoothing: antialiased;
-}
-
-.logo-main {
-    font-weight: 700; /* Uses poppins-v24-latin-700 */
-    color: #ffffff;
-}
-
-.logo-sub {
-    font-weight: 300; /* Uses poppins-v24-latin-300 for that elegant thin look */
-    color: rgba(255, 255, 255, 0.85);
-}
-
-.header-tagline {
-    font-weight: 600; /* Uses poppins-v24-latin-600 */
-    color: var(--brand-gold);
-    letter-spacing: 3px;
 }
 
 /* --- Footer Styling --- */
