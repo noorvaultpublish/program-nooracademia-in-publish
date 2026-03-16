@@ -13,7 +13,7 @@ jobs:
 
       - name: Clone private repo
         run: |
-          git clone https://${{ secrets.APP_PRIVATE_KEY }}@github.com/nooracademia-owner/vault-noor-academia-in.git source
+          git clone https://${{ secrets.PRIVATE_TOKEN }}@github.com/nooracademia-owner/vault-noor-academia-in.git source
 
       - name: Copy assets
         run: |
