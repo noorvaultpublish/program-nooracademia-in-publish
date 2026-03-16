@@ -12,3 +12,5 @@ gem "webrick", "~> 1.9"
 gem "bigdecimal", "~> 4.0"
 
 gem "base64", "~> 0.3.0"
+
+gem "jekyll", "~> 3.9.5"
