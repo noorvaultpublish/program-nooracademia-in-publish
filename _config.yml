@@ -2,6 +2,10 @@ title: Programming Course | Noor Academia
 url: "https://nooracademia.in"
 baseurl: ""
 
+# --- THE FIX: Disable the default theme ---
+theme: null
+# -------------------------------------------
+
 # Tell Jekyll where to find the synced Sass files from the Vault
 sass:
   sass_dir: _sass
@@ -10,7 +14,7 @@ sass:
 # Root path for synced assets (icons, etc.)
 vault_url: "/assets/vault"
 
-# Standard Jekyll Plugins
+# Plugins
 plugins:
   - jekyll-seo-tag
 
