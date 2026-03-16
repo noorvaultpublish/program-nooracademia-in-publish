@@ -1,0 +1,16 @@
+name: Sync to Publish Repo
+on:
+  push:
+    branches:
+      - main
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Push to Publish
+        run: |
+          git remote add target https://x-access-token:${{ secrets.PUBLISH_TOKEN }}@github.com/nooracademia-owner/program-nooracademia-in-publish.git
+          git push target main:main --force
