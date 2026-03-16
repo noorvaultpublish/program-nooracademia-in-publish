@@ -1,0 +1,35 @@
+name: Push and Trigger Remote
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  push-and-dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to Destination
+        env:
+          TOKEN: ${{ secrets.PUBLISH_P_TOKEN }}
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git remote add destination https://x-access-token:${TOKEN}@github.com/noorvaultpublish/program-nooracademia-in-publish.git
+          git push destination main --force
+
+      - name: Remote Workflow Trigger
+        env:
+          TOKEN: ${{ secrets.PUBLISH_P_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $TOKEN" \
+            https://api.github.com/repos/noorvaultpublish/program-nooracademia-in-publish/dispatches \
+            -d '{"event_type": "trigger_from_main"}'
