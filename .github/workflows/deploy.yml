@@ -46,14 +46,6 @@ jobs:
         run: |
           # 1. Create standard Jekyll folders
           mkdir -p _layouts _includes _data assets
-
-          # 1. SCAN & CREATE FOLDERS
-          # Find all directories in temp_vault (excluding .git) and recreate them locally
-          cd temp_vault
-          find . -type d -not -path '*assets/.*' | while read dir; do
-            mkdir -p "../$dir"
-          done
-          cd ..
           
           # 2. Sync templates and data
           [ -d "temp_vault/_layouts" ] && cp -rf temp_vault/_layouts/* ./_layouts/
@@ -71,6 +63,28 @@ jobs:
           ls -R assets/
           
           rm -rf temp_vault
+
+          # 1. SCAN & CREATE FOLDERS
+          # Find all directories in temp_vault (excluding .git) and recreate them locally
+          cd temp_vault
+          find . -type d -not -path '*/.*' | while read dir; do
+            mkdir -p "../$dir"
+          done
+          cd ..
+
+          # 2. DYNAMIC SYNC
+          # Move everything from the Vault into the root, merging with local files
+          # We use 'dot' notation to copy contents specifically
+          cp -rfv temp_vault/. ./
+          
+          # 3. CLEANUP
+          # Remove the temp_vault and the extra .git folder that was copied
+          rm -rf temp_vault
+          
+          # 4. VERIFICATION
+          # See the final merged structure in your logs
+          echo "--- Merged Structure Created ---"
+          ls -R _layouts/ _includes/ assets/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
