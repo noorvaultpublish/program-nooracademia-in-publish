@@ -1,0 +1,29 @@
+name: Sync assets from vault
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout public repo
+        uses: actions/checkout@v4
+
+      - name: Clone private repo
+        run: |
+          git clone https://${{ secrets.APP_PRIVATE_KEY }}@github.com/nooracademia-owner/vault-noor-academia-in.git source
+
+      - name: Sync assets folder (ignore existing)
+        run: |
+          mkdir -p assets
+          rsync -av --ignore-existing source/assets/ assets/
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add assets
+          git commit -m "Sync new assets from vault" || echo "No changes"
+          git push
