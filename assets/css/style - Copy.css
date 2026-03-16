@@ -1,0 +1,102 @@
+---
+---
+/* Noor Academia: Subdomain Styling */
+
+:root {
+    --primary-blue: #004a99;
+    --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --text-dark: #2d3436;
+    --bg-light: #f8fafd;
+    --white: #ffffff;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    margin: 0;
+    color: var(--text-dark);
+    background-color: var(--bg-light);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- Vault Header Implementation --- */
+header {
+    background: var(--white);
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-bottom: 4px solid var(--primary-blue);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-link { text-decoration: none; display: flex; align-items: center; }
+.header-logo { height: 50px; width: auto; }
+.logo-text-wrapper { margin-left: 12px; line-height: 1.2; }
+.logo-main { color: var(--primary-blue); font-weight: 800; font-size: 1.5rem; }
+.logo-sub { color: #555; font-weight: 400; font-size: 1.4rem; }
+.header-tagline { display: block; font-size: 0.65rem; color: #888; text-transform: uppercase; letter-spacing: 1.5px; }
+
+/* Navigation */
+nav ul { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
+nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; transition: 0.3s; }
+nav a:hover { color: var(--primary-blue); }
+.nav-compiler-link { background: var(--primary-blue); color: white !important; padding: 6px 15px; border-radius: 4px; }
+
+/* --- Course Catalog Grid --- */
+.catalog-hero { background: var(--primary-blue); color: white; padding: 50px 0; text-align: center; }
+.course-catalog { padding: 50px 0; }
+.course-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+
+.course-card {
+    background: white;
+    text-decoration: none;
+    color: var(--text-dark);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease;
+    border-top: 5px solid var(--primary-blue);
+    display: flex;
+    flex-direction: column;
+}
+
+.course-card:hover { transform: translateY(-8px); box-shadow: 0 10px 25px rgba(0,0,0,0.12); }
+.card-icon { background: #eef4ff; color: var(--primary-blue); font-weight: 900; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 6px; margin-bottom: 15px; }
+.course-card h3 { margin: 10px 0; color: var(--primary-blue); }
+.course-card p { font-size: 0.9rem; color: #636e72; margin: 0; }
+
+/* Mobile Menu Button Hidden for now */
+.menu-btn { display: none; }
+
+/* --- Vault Footer --- */
+footer {
+    padding: 40px 0;
+    text-align: center;
+    color: #636e72;
+    font-size: 0.9rem;
+    background-color: var(--white);
+    border-top: 1px solid #dfe6e9;
+    margin-top: 50px;
+}
+
+footer .container div:last-child {
+    margin-top: 10px;
+}
+
+footer .maint-link {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+footer .maint-link:hover {
+    text-decoration: underline;
+}
