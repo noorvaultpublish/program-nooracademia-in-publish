@@ -1,0 +1,10 @@
+services:
+  noor-app:
+    image: nginx:alpine
+    container_name: program-noor-local
+    ports:
+      - "9080:80"
+    volumes:
+      # Format: [Host Path]:[Container Path]:[Mode]
+      - F:\NoorAcdemia\local\program-nooracademia.in:/usr/share/nginx/html:ro
+    restart: always
