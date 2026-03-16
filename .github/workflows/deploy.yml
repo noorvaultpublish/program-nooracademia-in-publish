@@ -25,39 +25,41 @@ jobs:
       - name: Checkout Program Repo
         uses: actions/checkout@v4
 
-      # 1. Generate Token with explicit access to BOTH repos
+      # 1. Generate Token with access to both Vault and Program repos
       - name: Generate Temporary Token
         id: generate_token
         uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          # Explicitly request access to the Vault repo to prevent 404
           repositories: "vault-noor-academia-in, program-nooracademia.in"
 
       # 2. Securely clone the Private Vault
       - name: Checkout Private Vault
         uses: actions/checkout@v4
         with:
-          # Ensure this is the exact OWNER/REPO name from your browser URL
           repository: nooracademia-owner/vault-noor-academia-in
           token: ${{ steps.generate_token.outputs.token }}
           path: temp_vault
 
-      # 3. Synchronize Theme, Data, and Assets
+      # 3. Synchronize Theme, Data, and Assets (With Folder Existence Checks)
       - name: Sync Theme and Assets
         run: |
-          # Use -v (verbose) to see exactly what is being copied in the logs
-          cp -rfv temp_vault/_layouts .
-          cp -rfv temp_vault/_includes .
-          cp -rfv temp_vault/_sass .
+          # Ensure target directories exist
+          mkdir -p _layouts _includes _sass _data assets/vault
+
+          # Safely copy Theme folders if they exist in the Vault
+          if [ -d "temp_vault/_layouts" ]; then cp -rfv temp_vault/_layouts/* ./_layouts/; fi
+          if [ -d "temp_vault/_includes" ]; then cp -rfv temp_vault/_includes/* ./_includes/; fi
+          if [ -d "temp_vault/_sass" ]; then cp -rfv temp_vault/_sass/* ./_sass/; fi
           
-          mkdir -p _data
-          cp -fv temp_vault/_data/vault.json _data/vault.json 2>/dev/null || echo "No vault.json found"
+          # Safely sync Global Data
+          if [ -f "temp_vault/_data/vault.json" ]; then cp -fv temp_vault/_data/vault.json ./_data/; fi
           
-          mkdir -p assets/vault
-          cp -rfv temp_vault/assets/* assets/vault/
+          # Safely sync Assets to the local root
+          if [ -d "temp_vault/assets" ]; then cp -rfv temp_vault/assets/* ./assets/vault/; fi
           
+          # Cleanup the temporary folder
           rm -rf temp_vault
 
       # 4. Jekyll Build Process
