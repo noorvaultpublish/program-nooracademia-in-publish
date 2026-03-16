@@ -42,20 +42,23 @@ jobs:
 
       - name: Sync Theme and Assets
         run: |
+          # Create all destination folders
           mkdir -p assets/css assets/vault _layouts _includes _sass _data
 
-          # Sync Theme logic
-          [ -d "temp_vault/_layouts" ] && cp -rf temp_vault/_layouts/* ./_layouts/
-          [ -d "temp_vault/_includes" ] && cp -rf temp_vault/_includes/* ./_includes/
-          [ -d "temp_vault/_sass" ] && cp -rf temp_vault/_sass/* ./_sass/
+          # Sync Sass logic
+          if [ -d "temp_vault/_sass" ]; then cp -rfv temp_vault/_sass/* ./_sass/; fi
+          
+          # Sync Theme Templates
+          if [ -d "temp_vault/_layouts" ]; then cp -rfv temp_vault/_layouts/* ./_layouts/; fi
+          if [ -d "temp_vault/_includes" ]; then cp -rfv temp_vault/_includes/* ./_includes/; fi
           
           # Sync Data and Assets
-          [ -f "temp_vault/_data/vault.json" ] && cp -f temp_vault/_data/vault.json ./_data/
-          [ -d "temp_vault/assets" ] && cp -rf temp_vault/assets/* ./assets/vault/
+          if [ -f "temp_vault/_data/vault.json" ]; then cp -fv temp_vault/_data/vault.json ./_data/; fi
+          if [ -d "temp_vault/assets" ]; then cp -rfv temp_vault/assets/* ./assets/vault/; fi
           
-          # Verify the Sass file exists for the build
-          echo "Files in _sass:"
-          ls ./_sass
+          # VERIFICATION: List files to ensure main.scss is present
+          echo "Checking _sass folder content:"
+          ls -R _sass
           
           rm -rf temp_vault
 
