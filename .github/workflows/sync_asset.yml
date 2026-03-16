@@ -1,4 +1,4 @@
-name: Sync assets from vault
+name: Copy assets from vault
 
 on:
   workflow_dispatch:
@@ -8,22 +8,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout public repo
+      # Checkout the public repo (program)
+      - name: Checkout program repo
         uses: actions/checkout@v4
 
-      - name: Clone private repo
-        run: |
-          git clone https://${{ secrets.PRIVATE_TOKEN }}@github.com/nooracademia-owner/vault-noor-academia-in.git source
+      # Checkout the private repo (vault)
+      - name: Checkout vault repo
+        uses: actions/checkout@v4
+        with:
+          repository: nooracademia-owner/vault-noor-academia-in
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          path: vault
 
-      - name: Copy assets
+      # Copy assets
+      - name: Copy assets folder
         run: |
           mkdir -p assets
-          rsync -av --ignore-existing source/assets/ assets/
+          cp -r vault/assets/* assets/
 
-      - name: Commit and push
+      # Commit changes
+      - name: Commit changes
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add assets
-          git commit -m "Sync new assets from vault" || echo "No changes"
+          git commit -m "Copy assets from vault" || echo "No changes"
           git push
