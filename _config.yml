@@ -13,6 +13,10 @@ vault_url: "/assets/vault"
 plugins:
   - jekyll-seo-tag
 
+sass:
+  sass_dir: _sass
+  style: compressed
+
 # Ensure Jekyll includes the synced folders
 include:
   - _data
