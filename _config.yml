@@ -2,11 +2,10 @@ title: Programming Course | Noor Academia
 url: "https://nooracademia.in"
 baseurl: ""
 
-# --- THE FIX: Disable the default theme ---
+# Disable default themes to use our Vault theme
 theme: null
-# -------------------------------------------
 
-# Tell Jekyll where to find the synced Sass files from the Vault
+# Explicitly point to the local folder synced from the Vault
 sass:
   sass_dir: _sass
   style: compressed
@@ -14,11 +13,10 @@ sass:
 # Root path for synced assets (icons, etc.)
 vault_url: "/assets/vault"
 
-# Plugins
 plugins:
   - jekyll-seo-tag
 
-# Ensure Jekyll includes all the folders we are syncing from the Private Vault
+# Ensure Jekyll includes all the folders we are syncing
 include:
   - _data
   - _layouts
