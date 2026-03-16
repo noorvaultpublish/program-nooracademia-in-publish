@@ -3,13 +3,10 @@ name: Noor Academia Secure Deploy
 on:
   push:
     branches: ["main"]
-  # Allows the Vault repo to trigger this build automatically
   repository_dispatch:
     types: [vault_updated]
-  # Allows you to click "Run workflow" manually in the Actions tab
   workflow_dispatch:
 
-# Standard permissions for GitHub Pages
 permissions:
   contents: read
   pages: write
@@ -28,39 +25,39 @@ jobs:
       - name: Checkout Program Repo
         uses: actions/checkout@v4
 
-      # 1. Generate a 60-minute token from your GitHub App
+      # 1. Generate Token with explicit access to BOTH repos
       - name: Generate Temporary Token
         id: generate_token
         uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          # Explicitly request access to the Vault repo to prevent 404
+          repositories: "vault-noor-academia-in, program-nooracademia.in"
 
       # 2. Securely clone the Private Vault
       - name: Checkout Private Vault
         uses: actions/checkout@v4
         with:
+          # Ensure this is the exact OWNER/REPO name from your browser URL
           repository: nooracademia-owner/vault-noor-academia-in
           token: ${{ steps.generate_token.outputs.token }}
           path: temp_vault
 
-      # 3. Synchronize Theme, Data, and Assets from Vault to Program Repo
+      # 3. Synchronize Theme, Data, and Assets
       - name: Sync Theme and Assets
         run: |
-          # Sync Theme Folders (Overwrites existing to ensure brand consistency)
-          cp -rf temp_vault/_layouts .
-          cp -rf temp_vault/_includes .
-          cp -rf temp_vault/_sass .
+          # Use -v (verbose) to see exactly what is being copied in the logs
+          cp -rfv temp_vault/_layouts .
+          cp -rfv temp_vault/_includes .
+          cp -rfv temp_vault/_sass .
           
-          # Sync Global Data
           mkdir -p _data
-          cp -f temp_vault/_data/vault.json _data/vault.json 2>/dev/null || echo "No vault.json found"
+          cp -fv temp_vault/_data/vault.json _data/vault.json 2>/dev/null || echo "No vault.json found"
           
-          # Sync Assets to the Root Vault folder
           mkdir -p assets/vault
-          cp -rf temp_vault/assets/* assets/vault/
+          cp -rfv temp_vault/assets/* assets/vault/
           
-          # Cleanup the temporary folder
           rm -rf temp_vault
 
       # 4. Jekyll Build Process
@@ -73,7 +70,7 @@ jobs:
           source: ./
           destination: ./_site
 
-      # 5. Deployment to GitHub Pages
+      # 5. Deployment
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
