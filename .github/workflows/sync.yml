@@ -12,9 +12,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Push to Publish
+        env:
+          # This securely passes the token to the shell environment
+          TOKEN: ${{ secrets.PUBLISH_P_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git remote add target https://${{ secrets.PUBLISH_P_TOKEN }}@github.com/noorvaultpublish/program-nooracademia-in-publish.git
+          
+          # Use the token in the URL directly
+          git remote add target https://x-access-token:${TOKEN}@github.com/noorvaultpublish/program-nooracademia-in-publish.git
+          
           git push target main:main --force
