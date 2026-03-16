@@ -44,23 +44,23 @@ jobs:
 
       - name: Sync Brand Components
         run: |
-          # 1. Create the folders. -p ensures they are created only if missing.
-          mkdir -p _layouts _includes _data assets/vault/assets
+          # 1. Create standard Jekyll folders
+          mkdir -p _layouts _includes _data assets
           
           # 2. Sync templates and data
           [ -d "temp_vault/_layouts" ] && cp -rf temp_vault/_layouts/* ./_layouts/
           [ -d "temp_vault/_includes" ] && cp -rf temp_vault/_includes/* ./_includes/
           [ -f "temp_vault/_data/vault.json" ] && cp -f temp_vault/_data/vault.json ./_data/
           
-          # 3. Sync Logos/Icons/Images
-          # This copies the CONTENT of Vault/assets/ into Local/assets/vault/assets/
+          # 3. THE FIX: Merge Vault assets directly into /assets/
+          # This takes everything INSIDE temp_vault/assets/ and puts it in ./assets/
           if [ -d "temp_vault/assets" ]; then
-            cp -rf temp_vault/assets/* ./assets/vault/assets/
+            cp -rf temp_vault/assets/* ./assets/
           fi
           
-          # 4. Verification: Look for the icon in the logs
-          echo "--- Content of assets/vault/assets ---"
-          ls -R assets/vault/assets/
+          # 4. Verification: Look for the files in the logs
+          echo "--- Content of local assets folder ---"
+          ls -R assets/
           
           rm -rf temp_vault
 
