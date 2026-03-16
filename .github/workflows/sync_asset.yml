@@ -1,9 +1,9 @@
-name: Copy assets from vault
+name: Sync assets from vault
 
 on:
   workflow_dispatch:
 
-  permissions:
+permissions:
   contents: write
 
 jobs:
@@ -11,11 +11,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the public repo (program)
+
+      # Checkout public repo
       - name: Checkout program repo
         uses: actions/checkout@v4
 
-      # Checkout the private repo (vault)
+      # Checkout private repo
       - name: Checkout vault repo
         uses: actions/checkout@v4
         with:
@@ -23,27 +24,27 @@ jobs:
           token: ${{ secrets.PRIVATE_TOKEN }}
           path: vault
 
-      # Copy assets
-      - name: Copy assets folder
+      # Copy assets folder
+      - name: Copy assets
         run: |
           mkdir -p assets
           cp -r vault/assets/* assets/
 
-      # Commit changes
-     - name: Commit and push
-  run: |
-    git config user.name "github-actions"
-    git config user.email "actions@github.com"
+      # Commit and push safely
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
 
-    # Make sure we match the remote branch
-    git fetch origin main
-    git reset --hard origin/main
+          # Sync with remote
+          git fetch origin main
+          git reset --hard origin/main
 
-    # Add copied files
-    git add assets
+          # Add copied files
+          git add assets
 
-    # Commit if needed
-    git commit -m "Sync assets from vault" || echo "No changes"
+          # Commit only if there are changes
+          git commit -m "Sync assets from vault" || echo "No changes"
 
-    # Push changes
-    git push origin main
+          # Push changes
+          git push origin main
