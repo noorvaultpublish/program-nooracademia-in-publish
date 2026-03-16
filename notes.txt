@@ -1,0 +1,14 @@
+/* Specific Compiler Button Style */
+.nav-compiler-link { /* Golden button with golden text, no hover effect */
+    background-color: var(--brand-gold);
+    color: rgba(7, 2, 36, 0.94) !important;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    font-size: 0.85rem !important;
+    box-shadow: 0 3px 5px rgba(226, 193, 3, 0.849);
+    transition: all 0.3s ease; /* Transition is kept for other potential states, but hover is disabled */
+}
+
+/* 
