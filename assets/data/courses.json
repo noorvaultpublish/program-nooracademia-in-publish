@@ -1,0 +1,83 @@
+[
+    {
+        "title": "C Programming",
+        "iconUrl": "./assets/icons/c.svg",
+        "iconCdnUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg",
+        "iconText": "C",
+        "description": "The foundation of all modern coding and memory management.",
+        "url": "https://program.nooracademia.in/c",
+        "status": "coming-soon"
+    },
+    {
+        "title": "C++",
+        "iconUrl": "./assets/icons/cpp.svg",
+        "iconCdnUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cpp/cpp-original.svg",
+        "iconText": "C++",
+        "description": "Master Object-Oriented Programming and systems design.",
+        "url": "https://program.nooracademia.in/cpp",
+        "status": "coming-soon"
+    },
+    {
+        "title": "Java",
+        "iconUrl": "./assets/icons/java.svg",
+        "iconCdnUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
+        "iconText": "Java",
+        "description": "Build enterprise-level applications and Android apps.",
+        "url": "https://program.nooracademia.in/java",
+        "status": "coming-soon"
+    },
+    {
+        "title": "Python",
+        "iconUrl": "./assets/icons/python.svg",
+        "iconCdnUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+        "iconText": "Py",
+        "description": "Data Science, AI, and simple, readable automation.",
+        "url": "https://program.nooracademia.in/python",
+        "status": "coming-soon"
+    },
+    {
+        "title": "SQL",
+        "iconUrl": "./assets/icons/sql.svg",
+        "iconCdnUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-plain.svg",
+        "iconText": "SQL",
+        "description": "Manage, query, and structure relational databases.",
+        "url": "https://program.nooracademia.in/sql",
+        "status": "coming-soon"
+    },
+    {
+        "title": "JavaScript",
+        "iconUrl": "./assets/icons/javascript.svg",
+        "iconCdnUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+        "iconText": "JS",
+        "description": "The language of the web. Build interactive modern sites.",
+        "url": "https://program.nooracademia.in/javascript",
+        "status": "coming-soon"
+    },
+    {
+        "title": "HTML",
+        "iconUrl": "./assets/icons/html.svg",
+        "iconCdnUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
+        "iconText": "HTML",
+        "description": "The standard markup language for creating web pages.",
+        "url": "#",
+        "status": "coming-soon"
+    },
+    {
+        "title": "CSS",
+        "iconUrl": "./assets/icons/css.svg",
+        "iconCdnUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
+        "iconText": "CSS",
+        "description": "Style and layout web pages for beautiful presentation.",
+        "url": "#",
+        "status": "coming-soon"
+    },
+    {
+        "title": "PHP",
+        "iconUrl": "./assets/icons/php.svg",
+        "iconCdnUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg",
+        "iconText": "PHP",
+        "description": "Server-side scripting for dynamic web development.",
+        "url": "#",
+        "status": "coming-soon"
+    }
+]
