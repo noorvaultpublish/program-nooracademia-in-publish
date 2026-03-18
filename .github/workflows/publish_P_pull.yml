@@ -4,41 +4,66 @@ on:
   schedule:
     # Runs at minute 0 of every 4th hour
     - cron: '0 */4 * * *'
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
-  
+
 jobs:
   sync:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
-  
+    
     steps:
       - name: Checkout destination
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PUBLISH_P_TOKEN }}
-          fetch-depth: 0
+          # Fixes Exit 128: Ensures history is available for comparison
+          fetch-depth: 0 
 
-      - name: Sync Changes from Source
+      - name: Sync and Verify
+        env:
+          SOURCE_REPO: "https://x-access-token:${{ secrets.PUBLISH_P_TOKEN }}@github.com/nooracademia-owner/program-nooracademia.in.git"
+          PUBLIC_URL: "https://program-nooracademia.in"
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           
-          # 1. Add and fetch the private source
-          git remote add source https://x-access-token:${{ secrets.PUBLISH_P_TOKEN }}@github.com/nooracademia-owner/program-nooracademia.in.git
-          git fetch source main
+          # 1. Setup and Fetch Private Source
+          git remote add upstream "$SOURCE_REPO"
+          git fetch upstream main
 
-          # 2. Merge changes from source/main into current branch
-          # '--strategy-option theirs' ensures that if there's a conflict, the private repo wins.
-          # '--allow-unrelated-histories' is used if the repos started differently.
-          git merge source/main --strategy-option theirs --allow-unrelated-histories -m "Sync: Update changed files from private repo"
+          # 2. Calculate how many files are different
+          CHANGED_FILES=$(git diff --name-only HEAD upstream/main | wc -l)
+          
+          # 3. Perform the Merge
+          # Using 'theirs' ensures private repo content wins in conflicts
+          git merge upstream/main --strategy-option theirs --allow-unrelated-histories -m "Sync: Update from private repo" || echo "No new changes to merge"
 
-          # 3. Ensure your .github folder (workflows) stays untouched
-          # This pulls the workflow files back from your last local commit
-          git checkout HEAD@{1} -- .github/
+          # 4. Protect your Workflows
+          # Restore .github folder from the public repo's original state
+          git checkout origin/main -- .github/ || echo "Workflows already up to date"
 
-          # 4. Push updates
-          git push origin main
+          # 5. Check if the Website is Online
+          STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" "$PUBLIC_URL" || echo "OFFLINE")
+
+          # 6. Push if there are changes
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            git commit -m "Automated Sync: $CHANGED_FILES files updated"
+            git push origin main
+            SYNC_RESULT="✅ Changes Pushed Successfully"
+          else
+            SYNC_RESULT="ℹ️ No Changes Needed"
+            CHANGED_FILES=0
+          fi
+
+          # 7. Generate a Clean Log in GitHub Actions Summary
+          echo "### 🚀 Sync Report" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "| :--- | :--- |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Files Updated** | $CHANGED_FILES |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Public URL Status** | $STATUS_CODE |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Sync Action** | $SYNC_RESULT |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Target URL** | $PUBLIC_URL |" >> $GITHUB_STEP_SUMMARY
