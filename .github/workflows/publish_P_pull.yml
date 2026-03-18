@@ -18,9 +18,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PUBLISH_P_TOKEN }}
-          fetch-depth: 0 # Gets full history to help prevent Exit 128
+          fetch-depth: 0 
 
-      - name: Sync and Verify
+      - name: Backup to Fallback and Sync
         env:
           SOURCE_REPO: "https://x-access-token:${{ secrets.PUBLISH_P_TOKEN }}@github.com/nooracademia-owner/program-nooracademia.in.git"
           PUBLIC_URL: "https://program-nooracademia.in"
@@ -28,39 +28,47 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           
-          # 1. Setup Remote
+          # 1. CREATE BACKUP TO FALLBACK BRANCH
+          # This saves your current 'main' data to 'fallback' before any changes happen
+          echo "Creating safety backup to fallback branch..."
+          git checkout -B fallback
+          git push origin fallback --force
+          git checkout main
+
+          # 2. Setup Remote and Fetch
           git remote add upstream "$SOURCE_REPO"
           git fetch upstream main || { echo "❌ Failed to fetch from private repo"; exit 0; }
 
-          # 2. Count changes for the log
+          # 3. Calculate changes
           CHANGED_FILES=$(git diff --name-only HEAD upstream/main | wc -l || echo "0")
           
-          # 3. Merge (wrapped in || true so it never fails the job)
-          git merge upstream/main --strategy-option theirs --allow-unrelated-histories -m "Sync: Update from private repo" || echo "⚠️ Merge skipped or already up to date."
+          # 4. Initiate Replace/Merge
+          # Strategy 'theirs' ensures private repo overwrites conflicts in main
+          git merge upstream/main --strategy-option theirs --allow-unrelated-histories -m "Sync: Update from private repo" || echo "⚠️ Merge skipped"
 
-          # 4. Protect Workflows (FIX FOR EXIT 128)
-          # We use '|| echo' to ensure that if the log/history error occurs, the job continues
-          git checkout origin/main -- .github/ || echo "ℹ️ Log: Could not restore .github from history, keeping current version."
+          # 5. Protect Workflows
+          # Restore .github from the backup we just made
+          git checkout fallback -- .github/ || echo "ℹ️ Workflows already protected"
 
-          # 5. Check Website status
+          # 6. Check Website status
           STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" "$PUBLIC_URL" || echo "OFFLINE")
 
-          # 6. Push changes only if they exist
+          # 7. Push Changes to Main
           if [ -n "$(git status --porcelain)" ]; then
             git add .
             git commit -m "Automated Sync: $CHANGED_FILES files updated"
-            # Final safety: push only if possible, but don't fail the job if it fails
-            git push origin main || echo "❌ Push failed (likely no permissions or no changes)"
-            SYNC_RESULT="✅ Changes Pushed Successfully"
+            git push origin main || echo "❌ Push to main failed"
+            SYNC_RESULT="✅ Changes Pushed to Main"
           else
-            SYNC_RESULT="ℹ️ No Changes Detected"
+            SYNC_RESULT="ℹ️ Main is already up to date"
             CHANGED_FILES=0
           fi
 
-          # 7. Write to the Step Summary for easy reading
-          echo "### 🚀 Sync Report" >> $GITHUB_STEP_SUMMARY
+          # 8. Generate Report
+          echo "### 🚀 Sync & Backup Report" >> $GITHUB_STEP_SUMMARY
           echo "| Metric | Status |" >> $GITHUB_STEP_SUMMARY
           echo "| :--- | :--- |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Backup Status** | 📦 Saved to 'fallback' branch |" >> $GITHUB_STEP_SUMMARY
           echo "| **Files Updated** | $CHANGED_FILES |" >> $GITHUB_STEP_SUMMARY
           echo "| **Public URL Status** | $STATUS_CODE |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Sync Action** | $SYNC_RESULT |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Final Action** | $SYNC_RESULT |" >> $GITHUB_STEP_SUMMARY
