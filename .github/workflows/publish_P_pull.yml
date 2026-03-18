@@ -22,26 +22,23 @@ jobs:
           token: ${{ secrets.PUBLISH_P_TOKEN }}
           fetch-depth: 0
 
-      - name: Force Sync from Source
+      - name: Sync Changes from Source
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           
-          # Add the private source remote
+          # 1. Add and fetch the private source
           git remote add source https://x-access-token:${{ secrets.PUBLISH_P_TOKEN }}@github.com/nooracademia-owner/program-nooracademia.in.git
           git fetch source main
 
-          # 1. Reset the index to the private repo's main branch
-          git reset --hard source/main
+          # 2. Merge changes from source/main into current branch
+          # '--strategy-option theirs' ensures that if there's a conflict, the private repo wins.
+          # '--allow-unrelated-histories' is used if the repos started differently.
+          git merge source/main --strategy-option theirs --allow-unrelated-histories -m "Sync: Update changed files from private repo"
 
-          # 2. Restore the .github folder from the PUBLIC repo 
-          # This keeps your sync workflows from being deleted
+          # 3. Ensure your .github folder (workflows) stays untouched
+          # This pulls the workflow files back from your last local commit
           git checkout HEAD@{1} -- .github/
 
-          # 3. Clean up any untracked files
-          git clean -fd
-
-          # 4. Force push to the public repo
-          git add .
-          git commit -m "Force sync: Overwritten with private repo content" || echo "No changes to sync"
-          git push origin main --force
+          # 4. Push updates
+          git push origin main
