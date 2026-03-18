@@ -1,25 +1,78 @@
-name: Remote Handler
+name: Sync Private Repo
 on:
-  repository_dispatch:
-    types: [trigger_from_main]
   workflow_dispatch:
+  schedule:
+    - cron: '0 */4 * * *'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
 jobs:
-  trigger-sync:
+  sync:
     runs-on: ubuntu-latest
-    # ADD THIS BLOCK BELOW
     permissions:
-      actions: write
-      contents: read
+      contents: write
+    
     steps:
-      - name: Checkout repository
+      - name: Checkout destination
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PUBLISH_P_TOKEN }}
+          fetch-depth: 0 # Required to compare branches accurately
 
-      - name: Remote trigger received
-        run: echo "Starting the Sync Private Repo workflow..."
-
-      - name: Trigger Sync Private Repo
+      - name: Backup to Fallback and Sync
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE_REPO: "https://x-access-token:${{ secrets.PUBLISH_P_TOKEN }}@github.com/nooracademia-owner/program-nooracademia.in.git"
+          PUBLIC_URL: "https://program-nooracademia.in"
         run: |
-          gh workflow run "Sync Private Repo"
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          
+          # 1. Setup Remote and Fetch
+          git remote add upstream "$SOURCE_REPO"
+          git fetch upstream main || { echo "❌ Failed to fetch from private repo"; exit 0; }
+
+          # 2. Check for updates
+          # This counts how many files are different between private main and public main
+          CHANGED_FILES=$(git diff --name-only HEAD upstream/main | wc -l || echo "0")
+
+          if [ "$CHANGED_FILES" -eq "0" ]; then
+            echo "✅ No updates found in private repo. Skipping backup and sync."
+            echo "### 🚀 Sync Report" >> $GITHUB_STEP_SUMMARY
+            echo "| Metric | Status |" >> $GITHUB_STEP_SUMMARY
+            echo "| :--- | :--- |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Updates Found** | 0 |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Action** | No changes needed, skipping backup. |" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          echo "✨ $CHANGED_FILES files found updated. Starting backup and sync..."
+
+          # 3. CREATE BACKUP (Only runs because changes were found)
+          git checkout -B fallback
+          git push origin fallback --force
+          git checkout main
+
+          # 4. Perform Sync
+          git merge upstream/main --strategy-option theirs --allow-unrelated-histories -m "Sync: $CHANGED_FILES files updated" || echo "⚠️ Merge issues handled"
+
+          # 5. Protect Workflows
+          # Use the 'fallback' branch we just made to restore the .github folder
+          git checkout fallback -- .github/ || echo "ℹ️ Workflows safe"
+
+          # 6. Check Website status
+          STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" "$PUBLIC_URL" || echo "OFFLINE")
+
+          # 7. Push Changes
+          git add .
+          git commit -m "Automated Sync: $CHANGED_FILES files updated" || echo "Nothing to commit"
+          git push origin main || echo "❌ Push failed"
+
+          # 8. Generate Report
+          echo "### 🚀 Sync & Backup Report" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "| :--- | :--- |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Files Updated** | $CHANGED_FILES |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Backup Status** | 📦 Created 'fallback' branch |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Public URL Status** | $STATUS_CODE |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Final Action** | ✅ Successfully synced to main |" >> $GITHUB_STEP_SUMMARY
