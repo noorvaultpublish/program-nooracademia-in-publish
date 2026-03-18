@@ -4,11 +4,8 @@ on:
   schedule:
     - cron: '0 */4 * * *'
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
-
 jobs:
-  sync:
+  sync-and-verify:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -20,55 +17,75 @@ jobs:
           token: ${{ secrets.PUBLISH_P_TOKEN }}
           fetch-depth: 0 
 
-      - name: Backup to Fallback and Sync
+      - name: Process Sync Logic
         env:
           SOURCE_REPO: "https://x-access-token:${{ secrets.PUBLISH_P_TOKEN }}@github.com/nooracademia-owner/program-nooracademia.in.git"
-          PUBLIC_URL: "https://program-nooracademia.in"
+          PUBLIC_URL: "https://program.nooracademia.in"
+          DOMAIN_NAME: "program.nooracademia.in"
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           
-          # 1. CREATE BACKUP TO FALLBACK BRANCH
-          # This saves your current 'main' data to 'fallback' before any changes happen
-          echo "Creating safety backup to fallback branch..."
+          # 1. SETUP PRIVATE SOURCE
+          git remote add upstream "$SOURCE_REPO"
+          git fetch upstream main
+
+          # 2. CHECK FOR UPDATES
+          CHANGED_FILES=$(git diff --name-only origin/main upstream/main | wc -l || echo "0")
+          if [ "$CHANGED_FILES" -eq "0" ]; then
+            echo "No updates found. Exiting."
+            exit 0
+          fi
+
+          # 3. HARD RESET 'fetchdata' BRANCH
+          git checkout -B fetchdata
+          git reset --hard upstream/main
+          git push origin fetchdata --force
+
+          # 4. BACKUP 'main' TO 'fallback'
+          git checkout main
           git checkout -B fallback
           git push origin fallback --force
           git checkout main
 
-          # 2. Setup Remote and Fetch
-          git remote add upstream "$SOURCE_REPO"
-          git fetch upstream main || { echo "❌ Failed to fetch from private repo"; exit 0; }
-
-          # 3. Calculate changes
-          CHANGED_FILES=$(git diff --name-only HEAD upstream/main | wc -l || echo "0")
+          # 5. UPDATE 'main' FROM 'fetchdata'
+          git merge fetchdata --strategy-option theirs -m "Sync: Updates from fetchdata"
           
-          # 4. Initiate Replace/Merge
-          # Strategy 'theirs' ensures private repo overwrites conflicts in main
-          git merge upstream/main --strategy-option theirs --allow-unrelated-histories -m "Sync: Update from private repo" || echo "⚠️ Merge skipped"
+          # Force ensure CNAME exists on main after merge
+          echo "$DOMAIN_NAME" > CNAME
+          git add CNAME
+          git commit --amend --no-edit || git commit -m "Fix: Ensure CNAME for domain"
+          git push origin main --force
 
-          # 5. Protect Workflows
-          # Restore .github from the backup we just made
-          git checkout fallback -- .github/ || echo "ℹ️ Workflows already protected"
-
-          # 6. Check Website status
+          # 6. VERIFY URL STATUS & DNS
+          echo "Waiting 30 seconds for GitHub Pages deployment and DNS..."
+          sleep 30
           STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" "$PUBLIC_URL" || echo "OFFLINE")
-
-          # 7. Push Changes to Main
-          if [ -n "$(git status --porcelain)" ]; then
-            git add .
-            git commit -m "Automated Sync: $CHANGED_FILES files updated"
-            git push origin main || echo "❌ Push to main failed"
-            SYNC_RESULT="✅ Changes Pushed to Main"
+          
+          if [ "$STATUS_CODE" != "200" ]; then
+            echo "🚨 ALERT: $PUBLIC_URL returned $STATUS_CODE."
+            
+            # ATTEMPT DNS FIX: Re-write CNAME and push again
+            echo "Attempting DNS repair..."
+            echo "$DOMAIN_NAME" > CNAME
+            git add CNAME
+            git commit -m "Fix: Restore Custom Domain DNS Setting"
+            git push origin main
+            
+            sleep 20
+            RETRY_STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$PUBLIC_URL" || echo "OFFLINE")
+            
+            if [ "$RETRY_STATUS" != "200" ]; then
+              echo "🚨 REPAIR FAILED. INITIATING FULL ROLLBACK."
+              git reset --hard fallback
+              git push origin main --force
+              echo "ROLLBACK_EVENT=true" >> $GITHUB_ENV
+            fi
           else
-            SYNC_RESULT="ℹ️ Main is already up to date"
-            CHANGED_FILES=0
+            echo "✅ Website is UP at $DOMAIN_NAME."
           fi
 
-          # 8. Generate Report
-          echo "### 🚀 Sync & Backup Report" >> $GITHUB_STEP_SUMMARY
-          echo "| Metric | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "| :--- | :--- |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Backup Status** | 📦 Saved to 'fallback' branch |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Files Updated** | $CHANGED_FILES |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Public URL Status** | $STATUS_CODE |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Final Action** | $SYNC_RESULT |" >> $GITHUB_STEP_SUMMARY
+      # 7. EMAIL NOTIFICATION (STILL COMMENTED OUT)
+      # - name: Send Email on Failure
+      #   if: env.ROLLBACK_EVENT == 'true'
+      #   ... (email code)
